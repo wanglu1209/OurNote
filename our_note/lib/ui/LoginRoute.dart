@@ -1,7 +1,9 @@
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:our_note/ui/Loading.dart';
+import 'package:our_note/common/HeroTags.dart';
+import 'package:our_note/ui/MainRoute.dart';
+import 'package:our_note/utils/ToastUtil.dart';
 
 class LoginRoute extends StatefulWidget {
   @override
@@ -12,7 +14,6 @@ class _LoginRouteState extends State<LoginRoute> {
   TextEditingController _nameController;
   TextEditingController _pwdController;
   Loading _loading;
-  Flushbar _flushbar;
 
   FocusNode _nameNode = FocusNode();
   FocusNode _pwdNode = FocusNode();
@@ -21,14 +22,14 @@ class _LoginRouteState extends State<LoginRoute> {
   void initState() {
     super.initState();
     _loading = Loading();
-    _nameController = TextEditingController();
-    _pwdController = TextEditingController();
-    _flushbar = Flushbar()..duration = Duration(seconds: 2);
+    _nameController = TextEditingController()..text = 'admin';
+    _pwdController = TextEditingController()..text = 'admin';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        // 解决弹出键盘报px溢出问题
         resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.white,
         body: Stack(
@@ -38,16 +39,13 @@ class _LoginRouteState extends State<LoginRoute> {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 60.0),
-                    child: Container(
-                      margin: EdgeInsets.only(left: 10.0),
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'Welcome back!',
-                        style: TextStyle(
-                          fontSize: 30.0,
-                        ),
+                  Container(
+                    margin: EdgeInsets.only(left: 15.0, top: 60.0),
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Welcome back!',
+                      style: TextStyle(
+                        fontSize: 30.0,
                       ),
                     ),
                   ),
@@ -72,7 +70,7 @@ class _LoginRouteState extends State<LoginRoute> {
                       controller: _pwdController,
                       focusNode: _pwdNode,
                       onSubmitted: (s) {
-                        showLoading();
+                        login(context);
                       },
                       obscureText: true,
                       decoration: InputDecoration(
@@ -83,16 +81,19 @@ class _LoginRouteState extends State<LoginRoute> {
                     width: 250.0,
                     height: 40.0,
                     margin: EdgeInsets.only(top: 70.0),
-                    child: RaisedButton(
-                      colorBrightness: Brightness.dark,
-                      onPressed: () {
-                        login();
-                      },
-                      color: Theme.of(context).primaryColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0)),
-                      child: Text(
-                        'Login',
+                    child: Hero(
+                      tag: HeroTags.LOGIN_TO_MAIN,
+                      child: RaisedButton(
+                        colorBrightness: Brightness.dark,
+                        onPressed: () {
+                          login(context);
+                        },
+                        color: Theme.of(context).primaryColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0)),
+                        child: Text(
+                          'Login',
+                        ),
                       ),
                     ),
                   ),
@@ -115,16 +116,19 @@ class _LoginRouteState extends State<LoginRoute> {
         ));
   }
 
-  login() {
+  login(BuildContext context) {
     hideKeyboard();
-    if (_nameController.text.isEmpty) {
-      _flushbar
-        ..message = "账号不能为空"
-        ..show(context);
+    if (_nameController.text.isEmpty || _pwdController.text.isEmpty) {
+      ToastUtil.show(context, '请输入账号或密码');
       return;
     }
     showLoading();
     Future.delayed(Duration(seconds: 2)).then((e) {
+      Navigator.of(context).push(MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (context) {
+            return MainRoute();
+          }));
       hideLoading();
     });
   }
