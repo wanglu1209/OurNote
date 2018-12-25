@@ -11,6 +11,7 @@ class CalcGradientColor {
     int blueEnd = endColor.blue;
     int greenEnd = endColor.green;
     int alphaEnd = endColor.alpha;
+    if (totalStep == 0) totalStep = 1;
 
     int redCurrent =
         (redStart + (redEnd - redStart) / totalStep * step).toInt();

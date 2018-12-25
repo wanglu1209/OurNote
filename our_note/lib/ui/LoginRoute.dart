@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:our_note/ui/Loading.dart';
+import 'package:our_note/custom_view/Loading.dart';
 import 'package:our_note/common/HeroTags.dart';
 import 'package:our_note/ui/MainRoute.dart';
 import 'package:our_note/utils/ToastUtil.dart';

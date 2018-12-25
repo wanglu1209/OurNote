@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:our_note/common/MyIcons.dart';
+import 'package:our_note/ui/ConstellationPage.dart';
 
 class MainRoute extends StatefulWidget {
   final List<Tab> tabs = <Tab>[
@@ -35,12 +36,18 @@ class MainRoute extends StatefulWidget {
 class _MainRouteState extends State<MainRoute>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
+  List<String> titles = ['星座运势', '备忘录', '待办事项', '小姨妈'];
+  String title;
   @override
   void initState() {
     _tabController = TabController(vsync: this, length: widget.tabs.length);
     _tabController.addListener(() {
-      print(_tabController.index);
+      setState(() {
+        title = titles[_tabController.index];
+      });
     });
+    title = titles[0];
+    print(title);
     super.initState();
   }
 
@@ -59,7 +66,7 @@ class _MainRouteState extends State<MainRoute>
           elevation: 0.0,
           // 去掉返回键
           automaticallyImplyLeading: false,
-          title: Text('星座运势'),
+          title: Text(titles[_tabController.index]),
         ),
         body: Column(
           mainAxisSize: MainAxisSize.max,
@@ -79,11 +86,12 @@ class _MainRouteState extends State<MainRoute>
               ),
             ),
             Expanded(
-              child: TabBarView(
-                  controller: _tabController,
-                  children: widget.tabs
-                      .map((Tab tab) => Center(child: tab.child))
-                      .toList()),
+              child: TabBarView(controller: _tabController, children: <Widget>[
+                ConstellationPage(),
+                ConstellationPage(),
+                ConstellationPage(),
+                ConstellationPage()
+              ]),
             )
           ],
         ));
