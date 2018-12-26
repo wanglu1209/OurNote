@@ -24,9 +24,6 @@ class _ConstellationItemPageState extends State<ConstellationItemPage> {
             style: TextStyle(fontSize: 28.0),
           ),
         ),
-        GradientInstrumentPanel(
-          progress: widget.progress,
-        ),
       ],
     );
   }

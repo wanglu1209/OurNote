@@ -1,10 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:our_note/common/DioFactory.dart';
-import 'package:dio/dio.dart';
-import 'package:our_note/common/MyIcons.dart';
-import 'dart:convert';
+import 'package:our_note/custom_view/Bubbles.dart';
 import 'package:our_note/models/Constellation.dart';
-import 'package:our_note/ui/ConstellationItemPage.dart';
 
 class ConstellationPage extends StatefulWidget {
   @override
@@ -13,37 +11,12 @@ class ConstellationPage extends StatefulWidget {
 
 class _ConstellationPageState extends State<ConstellationPage>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
-  final List<Tab> tabs = <Tab>[
-    Tab(
-      child: Icon(
-        MyIcons.dot,
-        size: 15.0,
-      ),
-    ),
-    Tab(
-      child: Icon(
-        MyIcons.dot,
-        size: 15.0,
-      ),
-    ),
-    Tab(
-      child: Icon(
-        MyIcons.dot,
-        size: 15.0,
-      ),
-    ),
-    Tab(
-      child: Icon(
-        MyIcons.dot,
-        size: 15.0,
-      ),
-    ),
-  ];
+  PageController _controller;
+
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(initialIndex: 0, length: 4, vsync: this);
+    _controller = PageController(viewportFraction: 0.8);
     // requestConstellation();
   }
 
@@ -58,34 +31,62 @@ class _ConstellationPageState extends State<ConstellationPage>
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 50.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      color: Colors.white,
+      child: Stack(
         children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: Container(
-              child: TabBarView(controller: _tabController, children: <Widget>[
-                ConstellationItemPage(title: '爱情运势', progress: 30),
-                ConstellationItemPage(title: '工作状况', progress: 40),
-                ConstellationItemPage(title: '投资理财', progress: 20),
-                ConstellationItemPage(title: '健康指数', progress: 25),
-              ]),
-            ),
-          ),
+          Bubbles(),
           Container(
-            constraints: BoxConstraints.tight(Size(90, 100)),
-            child: TabBar(
-              controller: _tabController,
-              indicatorColor: Theme.of(context).primaryColor,
-              indicatorSize: TabBarIndicatorSize.tab,
-              labelColor: Theme.of(context).primaryColor,
-              unselectedLabelColor: Colors.grey,
-              indicatorWeight: 1,
-              tabs: tabs,
-              isScrollable: false,
-            ),
-          )
+              alignment: Alignment.topCenter,
+              margin: EdgeInsets.only(top: 80.0),
+              child: Container(
+                height: 450,
+                color: Colors.transparent,
+                child: PageView(
+                  controller: _controller,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.only(bottom: 10.0),
+                      child: Card(
+                          elevation: 5.0,
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20.0),
+                                child: Text(
+                                  '爱情运势',
+                                  style: TextStyle(fontSize: 30.0),
+                                ),
+                              )
+                            ],
+                          )),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(bottom: 10.0),
+                      child: Card(
+                          elevation: 5.0,
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                              'Test',
+                              style: TextStyle(fontSize: 20.0),
+                            ),
+                          )),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(bottom: 10.0),
+                      child: Card(
+                          elevation: 5.0,
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                              'Test',
+                              style: TextStyle(fontSize: 20.0),
+                            ),
+                          )),
+                    ),
+                  ],
+                ),
+              ))
         ],
       ),
     );

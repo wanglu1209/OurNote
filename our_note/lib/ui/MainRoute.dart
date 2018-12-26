@@ -47,7 +47,6 @@ class _MainRouteState extends State<MainRoute>
       });
     });
     title = titles[0];
-    print(title);
     super.initState();
   }
 
