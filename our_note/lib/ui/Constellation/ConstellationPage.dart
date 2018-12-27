@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:our_note/common/DioFactory.dart';
 import 'package:our_note/custom_view/Bubbles.dart';
 import 'package:our_note/models/Constellation.dart';
+import 'package:our_note/ui/Constellation/TodayConstellationPage.dart';
 
 class ConstellationPage extends StatefulWidget {
   @override
@@ -37,29 +39,14 @@ class _ConstellationPageState extends State<ConstellationPage>
           Bubbles(),
           Container(
               alignment: Alignment.topCenter,
-              margin: EdgeInsets.only(top: 80.0),
+              margin: EdgeInsets.only(top: 100.0),
               child: Container(
-                height: 450,
+                margin: EdgeInsets.only(bottom: ScreenUtil().setHeight(80)),
                 color: Colors.transparent,
                 child: PageView(
                   controller: _controller,
                   children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.only(bottom: 10.0),
-                      child: Card(
-                          elevation: 5.0,
-                          child: Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 20.0),
-                                child: Text(
-                                  '爱情运势',
-                                  style: TextStyle(fontSize: 30.0),
-                                ),
-                              )
-                            ],
-                          )),
-                    ),
+                    TodayConstellationPage(),
                     Container(
                       padding: EdgeInsets.only(bottom: 10.0),
                       child: Card(

@@ -16,7 +16,16 @@ class MyIcons {
   // 姨妈
   static const IconData menses =
       const IconData(0xe636, fontFamily: 'Iconfont', matchTextDirection: true);
+
   // 姨妈
   static const IconData dot =
       const IconData(0xe6bf, fontFamily: 'Iconfont', matchTextDirection: true);
+
+  // 笑脸
+  static const IconData smile =
+      const IconData(0xe687, fontFamily: 'Iconfont', matchTextDirection: true);
+
+  // 心
+  static const IconData heart =
+      const IconData(0xe644, fontFamily: 'Iconfont', matchTextDirection: true);
 }

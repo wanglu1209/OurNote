@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:our_note/custom_view/Loading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:our_note/common/HeroTags.dart';
+import 'package:our_note/custom_view/Loading.dart';
 import 'package:our_note/ui/MainRoute.dart';
 import 'package:our_note/utils/ToastUtil.dart';
 
@@ -28,6 +29,7 @@ class _LoginRouteState extends State<LoginRoute> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
     return Scaffold(
         // 解决弹出键盘报px溢出问题
         resizeToAvoidBottomPadding: false,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:our_note/common/MyIcons.dart';
-import 'package:our_note/ui/ConstellationPage.dart';
+import 'package:our_note/ui/Constellation/ConstellationPage.dart';
 
 class MainRoute extends StatefulWidget {
   final List<Tab> tabs = <Tab>[
