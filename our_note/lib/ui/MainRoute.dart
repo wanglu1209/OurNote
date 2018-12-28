@@ -40,7 +40,7 @@ class _MainRouteState extends State<MainRoute>
   String title;
   @override
   void initState() {
-    _tabController = TabController(vsync: this, length: widget.tabs.length);
+    _tabController = TabController(length: widget.tabs.length, vsync: this);
     _tabController.addListener(() {
       setState(() {
         title = titles[_tabController.index];

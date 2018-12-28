@@ -64,7 +64,7 @@ class _BubblesState extends State<Bubbles> with SingleTickerProviderStateMixin {
   }
 
   void restoreSpeed() {
-    bubbles.forEach((it) => it.setNewSpeed(2));
+    bubbles.forEach((it) => it.setNewSpeed(1));
     setState(() {});
   }
 
@@ -102,7 +102,7 @@ class Bubble {
   Bubble(Color colour, double maxBubbleSize) {
     this.colour = colour.withOpacity(Random().nextDouble());
     this.direction = Random().nextDouble() * 360;
-    this.speed = 2;
+    this.speed = 1;
     this.radius = Random().nextDouble() * maxBubbleSize;
   }
 
