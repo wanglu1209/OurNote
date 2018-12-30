@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:our_note/common/MyIcons.dart';
 import 'package:our_note/ui/Constellation/ConstellationPage.dart';
+import 'package:our_note/ui/Note/NotePage.dart';
 
 class MainRoute extends StatefulWidget {
   final List<Tab> tabs = <Tab>[
     Tab(
       child: Icon(
         MyIcons.constellation,
-        size: 30.0,
+        size: 25.0,
       ),
     ),
     Tab(
       child: Icon(
         MyIcons.memorandum,
-        size: 30.0,
+        size: 25.0,
       ),
     ),
     Tab(
       child: Icon(
         MyIcons.todo,
-        size: 30.0,
+        size: 25.0,
       ),
     ),
     Tab(
       child: Icon(
         MyIcons.menses,
-        size: 30.0,
+        size: 25.0,
       ),
     ),
   ];
@@ -79,7 +80,7 @@ class _MainRouteState extends State<MainRoute>
                 labelColor: Theme.of(context).primaryColor,
                 unselectedLabelColor: Colors.grey,
                 indicatorWeight: 1,
-                labelPadding: EdgeInsets.only(bottom: 10.0),
+                labelPadding: EdgeInsets.only(bottom: 5.0),
                 tabs: widget.tabs,
                 isScrollable: false,
               ),
@@ -87,7 +88,7 @@ class _MainRouteState extends State<MainRoute>
             Expanded(
               child: TabBarView(controller: _tabController, children: <Widget>[
                 ConstellationPage(),
-                ConstellationPage(),
+                NotePage(),
                 ConstellationPage(),
                 ConstellationPage()
               ]),
