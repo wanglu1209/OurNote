@@ -74,8 +74,10 @@ class _ConstellationPageState extends State<ConstellationPage>
         'http://web.juhe.cn:8080/constellation/getAll?consName=%E5%8F%8C%E5%AD%90%E5%BA%A7&type=today&key=fa8e09bf39d81506121db976accb3927');
     Constellation constellation =
         Constellation.fromJson(json.decode(response.data));
-    summaryText = constellation.summary;
-    summaryRating = double.parse(constellation.all.substring(0, 1)) / 2;
+    if (constellation.all != null) {
+      summaryText = constellation.summary ?? "";
+      summaryRating = double.parse(constellation.all.substring(0, 1)) / 2;
+    }
 
     setState(() {});
   }

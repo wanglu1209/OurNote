@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 
 class NoteDetailPage extends StatefulWidget {
   final String title;
@@ -13,10 +16,18 @@ class NoteDetailPage extends StatefulWidget {
 
 class _NoteDetailPageState extends State<NoteDetailPage> {
   TextEditingController _controller;
+  File _image;
+
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      _image = image;
+    });
+  }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _controller =
         TextEditingController(text: '${widget.title}\n\n${widget.subtitle}');
@@ -34,7 +45,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                 Icons.photo_library,
               ),
               onPressed: () {
-                print('点击了more');
+                getImage();
               })
         ],
       ),
