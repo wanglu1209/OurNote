@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:our_note/models/Note.dart';
 import 'package:our_note/ui/Note/NoteDetailPage.dart';
 
 class NoteItemWidget extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final int index;
-
-  NoteItemWidget(this.title, this.subtitle, this.index);
+  final Data data;
+  NoteItemWidget(this.data);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text('Test Title'),
-      subtitle: Text('Test Subtitle\nSubtitle'),
+      title: Text(data.title),
+      subtitle: Text(data.content),
       isThreeLine: true,
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return NoteDetailPage('Test Title', 'Test Subtitle\nSubtitle');
+          return NoteDetailPage(data);
         }));
       },
     );

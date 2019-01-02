@@ -1,14 +1,14 @@
-import 'dart:io';
-
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:our_note/common/DioFactory.dart';
+import 'package:our_note/models/Note.dart';
 
 class NoteDetailPage extends StatefulWidget {
-  final String title;
-  final String subtitle;
+  final Data note;
 
-  NoteDetailPage(this.title, this.subtitle);
+  NoteDetailPage(this.note);
 
   @override
   _NoteDetailPageState createState() => _NoteDetailPageState();
@@ -16,21 +16,27 @@ class NoteDetailPage extends StatefulWidget {
 
 class _NoteDetailPageState extends State<NoteDetailPage> {
   TextEditingController _controller;
-  File _image;
+
+  /// 获取备忘录列表
+  updateNoteContent(String title, String content) {
+    FormData formData = FormData.from(
+        {"id": widget.note.id, "title": title, 'content': content});
+
+    DioFactory.getDio()
+        .post('http://d3collection.cn:6090/updateNoteContent', data: formData);
+  }
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
 
-    setState(() {
-      _image = image;
-    });
+    setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    _controller =
-        TextEditingController(text: '${widget.title}\n\n${widget.subtitle}');
+    _controller = TextEditingController(
+        text: '${widget.note.title}\n${widget.note.content}');
   }
 
   @override
@@ -57,6 +63,11 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
           decoration: InputDecoration(border: InputBorder.none),
           maxLines: null,
           controller: _controller,
+          onChanged: (s) {
+            String title = s.substring(0, s.indexOf('\n'));
+            String content = s.substring(s.indexOf('\n') + 1);
+            updateNoteContent(title, content);
+          },
         ),
       ),
     );
