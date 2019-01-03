@@ -10,8 +10,10 @@ class NoteItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(data.title),
-      subtitle: Text(data.content),
-      isThreeLine: true,
+      subtitle: Text(
+        data.content,
+        maxLines: 3,
+      ),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
           return NoteDetailPage(data);

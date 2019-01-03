@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -22,5 +23,14 @@ class Utils {
             color: Theme.of(context).primaryColor,
           );
         });
+  }
+
+  static EventBus eventBus;
+
+  static EventBus getEventBus() {
+    if (eventBus == null) {
+      eventBus = EventBus();
+    }
+    return eventBus;
   }
 }

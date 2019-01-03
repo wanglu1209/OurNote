@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:our_note/common/DioFactory.dart';
 import 'package:our_note/models/Note.dart';
+import 'package:our_note/ui/Note/NoteDetailPage.dart';
 import 'package:our_note/ui/Note/NoteItemWidget.dart';
+import 'package:our_note/utils/Utils.dart';
 
 class NotePage extends StatefulWidget {
   @override
@@ -18,6 +20,20 @@ class _NotePageState extends State<NotePage> {
   void initState() {
     super.initState();
     requestNoteList();
+
+    Utils.getEventBus().on<Data>().listen((d) {
+      if (data.map((it) => it.id).toList().contains(d.id)) {
+        data.forEach((da) {
+          if (da.id == d.id) {
+            da.content = d.content;
+            da.title = d.title;
+            setState(() {});
+          }
+        });
+      } else {
+        requestNoteList();
+      }
+    });
   }
 
   /// 获取备忘录列表
@@ -28,6 +44,14 @@ class _NotePageState extends State<NotePage> {
     this.data = data.data;
 
     setState(() {});
+  }
+
+  deleteNote(int id) async {
+    DioFactory.getDio().get('http://d3collection.cn:6090/deleteNote/$id');
+  }
+
+  undoDeleteNote(int id) async {
+    DioFactory.getDio().get('http://d3collection.cn:6090/undoDeleteNote/$id');
   }
 
   @override
@@ -47,11 +71,17 @@ class _NotePageState extends State<NotePage> {
             itemBuilder: (context, index) {
               return Dismissible(
                   onDismissed: (direction) {
-                    data.removeAt(index);
-                    print(data.toString());
+                    deleteNote(data[index].id);
+                    var d = data.removeAt(index);
                     Scaffold.of(context).showSnackBar(SnackBar(
-                      content: Text('删除了第$index个item'),
-                      action: SnackBarAction(label: '撤回', onPressed: () {}),
+                      content: Text('删除成功'),
+                      action: SnackBarAction(
+                          label: '撤回',
+                          onPressed: () {
+                            undoDeleteNote(data[index].id);
+                            data.insert(index, d);
+                            setState(() {});
+                          }),
                     ));
                     setState(() {});
                   },
@@ -74,6 +104,15 @@ class _NotePageState extends State<NotePage> {
             }),
       );
     }
-    return Scaffold(body: body);
+    return Scaffold(
+        floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add),
+            backgroundColor: Theme.of(context).primaryColor,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return NoteDetailPage(Data(id: -1));
+              }));
+            }),
+        body: body);
   }
 }

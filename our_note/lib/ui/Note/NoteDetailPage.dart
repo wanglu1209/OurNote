@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:our_note/common/DioFactory.dart';
 import 'package:our_note/models/Note.dart';
+import 'package:our_note/utils/Utils.dart';
 
 class NoteDetailPage extends StatefulWidget {
   final Data note;
@@ -16,14 +17,27 @@ class NoteDetailPage extends StatefulWidget {
 
 class _NoteDetailPageState extends State<NoteDetailPage> {
   TextEditingController _controller;
+  bool isAddingNewNote = false;
 
-  /// 获取备忘录列表
+  /// 更新内容
   updateNoteContent(String title, String content) {
     FormData formData = FormData.from(
         {"id": widget.note.id, "title": title, 'content': content});
 
     DioFactory.getDio()
         .post('http://d3collection.cn:6090/updateNoteContent', data: formData);
+  }
+
+  addNewNote(String title, String content) async {
+    isAddingNewNote = true;
+    FormData formData = FormData.from({"title": title, 'content': content});
+
+    Response response = await DioFactory.getDio()
+        .post('http://d3collection.cn:6090/addNote', data: formData)
+        .whenComplete(() => isAddingNewNote = false);
+    print('id = ${response.data['data']['id']}');
+
+    widget.note.id = response.data['data']['id'];
   }
 
   Future getImage() async {
@@ -35,8 +49,10 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(
-        text: '${widget.note.title}\n${widget.note.content}');
+    var text = "";
+    if (widget.note.title != null) text += widget.note.title;
+    if (widget.note.content != null) text += '\n${widget.note.content}';
+    _controller = TextEditingController(text: text);
   }
 
   @override
@@ -64,9 +80,22 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
           maxLines: null,
           controller: _controller,
           onChanged: (s) {
-            String title = s.substring(0, s.indexOf('\n'));
-            String content = s.substring(s.indexOf('\n') + 1);
-            updateNoteContent(title, content);
+            String title;
+            String content;
+            if (s.contains('\n')) {
+              title = s.substring(0, s.indexOf('\n'));
+              content = s.substring(s.indexOf('\n') + 1);
+            } else {
+              title = s;
+            }
+            widget.note.title = title;
+            widget.note.content = content;
+            if (widget.note.id == -1) {
+              if (!isAddingNewNote) addNewNote(title, content);
+            } else
+              updateNoteContent(title, content);
+            // 通过EventBus把更改过的数据发送出去
+            Utils.getEventBus().fire(widget.note);
           },
         ),
       ),
