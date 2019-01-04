@@ -4,6 +4,7 @@ import 'package:our_note/ui/Note/NoteDetailPage.dart';
 
 class NoteItemWidget extends StatelessWidget {
   final Data data;
+
   NoteItemWidget(this.data);
 
   @override
@@ -11,7 +12,7 @@ class NoteItemWidget extends StatelessWidget {
     return ListTile(
       title: Text(data.title),
       subtitle: Text(
-        data.content,
+        data.content ?? "",
         maxLines: 3,
       ),
       onTap: () {
