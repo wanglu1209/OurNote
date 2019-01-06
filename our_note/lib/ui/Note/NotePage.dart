@@ -12,7 +12,8 @@ class NotePage extends StatefulWidget {
   _NotePageState createState() => _NotePageState();
 }
 
-class _NotePageState extends State<NotePage> {
+class _NotePageState extends State<NotePage>
+    with AutomaticKeepAliveClientMixin {
   List<Data> data;
   int page = 1;
 
@@ -115,4 +116,8 @@ class _NotePageState extends State<NotePage> {
             }),
         body: body);
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

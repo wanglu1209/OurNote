@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:our_note/common/MyIcons.dart';
 import 'package:our_note/ui/Constellation/ConstellationPage.dart';
 import 'package:our_note/ui/Note/NotePage.dart';
+import 'package:our_note/ui/todo/TodoPage.dart';
 
 class MainRoute extends StatefulWidget {
   final List<Tab> tabs = <Tab>[
@@ -89,7 +90,7 @@ class _MainRouteState extends State<MainRoute>
               child: TabBarView(controller: _tabController, children: <Widget>[
                 ConstellationPage(),
                 NotePage(),
-                ConstellationPage(),
+                TodoPage(),
                 ConstellationPage()
               ]),
             )
