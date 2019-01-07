@@ -44,7 +44,7 @@ class _NotePageState extends State<NotePage>
     Note data = Note.fromJson(response.data);
     this.data = data.data;
 
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   deleteNote(int id) async {

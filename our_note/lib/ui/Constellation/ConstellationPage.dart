@@ -17,7 +17,7 @@ class ConstellationPage extends StatefulWidget {
 }
 
 class _ConstellationPageState extends State<ConstellationPage>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   String summaryText = ""; // 整体描述
   double summaryRating = 0; // 整体星
   String luckyNum = ""; // 幸运数字
@@ -64,7 +64,7 @@ class _ConstellationPageState extends State<ConstellationPage>
     workText = day.workTxt;
     loveText = day.loveTxt;
     moneyText = day.moneyTxt;
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   /// 获取整体运势
@@ -78,8 +78,7 @@ class _ConstellationPageState extends State<ConstellationPage>
       summaryText = constellation.summary ?? "";
       summaryRating = double.parse(constellation.all.substring(0, 1)) / 2;
     }
-
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   @override
