@@ -14,21 +14,18 @@ class _TodoPageState extends State<TodoPage>
   bool isComplete = false;
   int page = 1;
   List<TodoData> todoData;
-  TextEditingController _editingController;
   FocusNode _focusNode;
-  bool isShowEdit = false;
 
   @override
   void initState() {
     super.initState();
-    _editingController = TextEditingController();
     _focusNode = FocusNode();
     getTodoList();
   }
 
   getTodoList() async {
     Response response = await DioFactory.getDio()
-        .get('http://d3collection.cn:6090/getTodoList/$page');
+        .get('http://d3collection.cn:6090/getTodoList/$page/0');
     todoData = Todo.fromJson(response.data).data;
     setState(() {});
   }
@@ -39,61 +36,91 @@ class _TodoPageState extends State<TodoPage>
         .post('http://d3collection.cn:6090/changeTodoStatus', data: formData);
   }
 
+  addNewTodo(String content) {
+    FormData formData = FormData.from({'content': content});
+    DioFactory.getDio()
+        .post('http://d3collection.cn:6090/addNewTodo', data: formData);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomPadding: true,
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
             backgroundColor: Theme.of(context).primaryColor,
             onPressed: () {
-              isShowEdit = !isShowEdit;
-              FocusScope.of(context).requestFocus(_focusNode);
+              TodoData data = TodoData(id: -1);
+              todoData.add(data);
+              setState(() {
+                FocusScope.of(context).requestFocus(_focusNode);
+              });
             }),
         backgroundColor: Colors.white,
-        body: Flex(
-          direction: Axis.vertical,
+        body: Stack(
           children: <Widget>[
-            Expanded(
-                flex: 1,
-                child: ListView.builder(
-                    itemCount: todoData == null ? 0 : todoData.length,
-                    itemBuilder: (context, index) {
-                      bool isComplete =
-                          todoData[index].status == 1 ? true : false;
-                      return Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Row(
-                          children: <Widget>[
-                            Checkbox(
-                                activeColor: Theme.of(context).primaryColor,
-                                value: isComplete,
-                                onChanged: (b) {
-                                  todoData[index].status = b ? 1 : 0;
-                                  setState(() {});
-                                  changeTodoStatus(todoData[index].id,
-                                      todoData[index].status);
-                                }),
-                            Text(
-                              todoData[index].content,
-                              style: TextStyle(
-                                  fontSize: ScreenUtil().setSp(36),
-                                  decoration: isComplete
-                                      ? TextDecoration.lineThrough
-                                      : null),
-                            ),
-                          ],
-                        ),
-                      );
-                    })),
-            Offstage(
-                offstage: !isShowEdit,
-                child: SingleChildScrollView(
-                  child: TextField(
-                    focusNode: _focusNode,
-                    controller: _editingController,
-                    decoration: InputDecoration(border: InputBorder.none),
-                  ),
-                ))
+            ListView.builder(
+                itemCount: todoData == null ? 0 : todoData.length,
+                itemBuilder: (context, index) {
+                  bool isComplete = todoData[index].status == 1 ? true : false;
+                  Widget widget;
+                  // 如果id == -1 那么则是新增一条
+                  if (todoData[index].id == -1) {
+                    widget = Expanded(
+                        child: TextField(
+                      focusNode: _focusNode,
+                      decoration: InputDecoration(border: InputBorder.none),
+                      onSubmitted: (s) {
+                        _focusNode.dispose();
+                        addNewTodo(s);
+                        getTodoList();
+                      },
+                      textInputAction: TextInputAction.done,
+                    ));
+                  } else {
+                    widget = Text(
+                      todoData[index].content ?? "",
+                      style: TextStyle(
+                          fontSize: ScreenUtil().setSp(36),
+                          color: isComplete ? Colors.grey : Colors.black,
+                          decoration:
+                              isComplete ? TextDecoration.lineThrough : null),
+                    );
+                  }
+                  return Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Row(
+                      children: <Widget>[
+                        Checkbox(
+                            activeColor: Theme.of(context).primaryColor,
+                            value: isComplete,
+                            onChanged: (b) {
+                              todoData[index].status = b ? 1 : 0;
+                              setState(() {});
+                              changeTodoStatus(
+                                  todoData[index].id, todoData[index].status);
+                            }),
+                        widget
+                      ],
+                    ),
+                  );
+                }),
+            Container(
+              alignment: Alignment.bottomCenter,
+              margin: EdgeInsets.only(bottom: 30),
+              child: RaisedButton(
+                padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
+                color: Theme.of(context).primaryColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0)),
+                colorBrightness: Brightness.dark,
+                onPressed: () {},
+                child: Text(
+                  '回收站',
+                  style: TextStyle(fontSize: ScreenUtil().setSp(36)),
+                ),
+              ),
+            )
           ],
         ));
   }
