@@ -53,7 +53,6 @@ class _AnimatedListSampleState extends State<AnimatedListSample> {
       animation: animation,
       item: item,
       selected: false,
-      // No gesture detector here: we don't want removed items to be interactive.
     );
   }
 
