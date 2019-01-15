@@ -59,51 +59,52 @@ class _TodoPageState extends State<TodoPage>
         backgroundColor: Colors.white,
         body: Stack(
           children: <Widget>[
-            AnimatedList(
-                initialItemCount: 3,
-                itemBuilder: (context, index, animation) {
-                  bool isComplete = todoData[index].status == 1 ? true : false;
-                  Widget widget;
-                  // 如果id == -1 那么则是新增一条
-                  if (todoData[index].id == -1) {
-                    widget = Expanded(
-                        child: TextField(
-                      focusNode: _focusNode,
-                      decoration: InputDecoration(border: InputBorder.none),
-                      onSubmitted: (s) {
-                        _focusNode.dispose();
-                        addNewTodo(s);
-                        getTodoList();
-                      },
-                      textInputAction: TextInputAction.done,
-                    ));
-                  } else {
-                    widget = Text(
-                      todoData[index].content ?? "",
-                      style: TextStyle(
-                          fontSize: ScreenUtil().setSp(36),
-                          color: isComplete ? Colors.grey : Colors.black,
-                          decoration:
-                              isComplete ? TextDecoration.lineThrough : null),
-                    );
-                  }
-                  return ListTile(
-                    key: Key(todoData[index].id.toString()),
-                    leading: Checkbox(
-                        activeColor: Theme.of(context).primaryColor,
-                        value: isComplete,
-                        onChanged: (b) {
-                          todoData[index].status = b ? 1 : 0;
-
-                          if (b) todoData.removeAt(index);
-
-                          setState(() {});
-                          changeTodoStatus(
-                              todoData[index].id, todoData[index].status);
-                        }),
-                    title: widget,
+            ListView.builder(
+              itemCount: todoData == null ? 0 : todoData.length,
+              itemBuilder: (context, index) {
+                bool isComplete = todoData[index].status == 1 ? true : false;
+                Widget widget;
+                // 如果id == -1 那么则是新增一条
+                if (todoData[index].id == -1) {
+                  widget = Expanded(
+                      child: TextField(
+                    focusNode: _focusNode,
+                    decoration: InputDecoration(border: InputBorder.none),
+                    onSubmitted: (s) {
+                      _focusNode.dispose();
+                      addNewTodo(s);
+                      getTodoList();
+                    },
+                    textInputAction: TextInputAction.done,
+                  ));
+                } else {
+                  widget = Text(
+                    todoData[index].content ?? "",
+                    style: TextStyle(
+                        fontSize: ScreenUtil().setSp(36),
+                        color: isComplete ? Colors.grey : Colors.black,
+                        decoration:
+                            isComplete ? TextDecoration.lineThrough : null),
                   );
-                }),
+                }
+                return ListTile(
+                  key: Key(todoData[index].id.toString()),
+                  leading: Checkbox(
+                      activeColor: Theme.of(context).primaryColor,
+                      value: isComplete,
+                      onChanged: (b) {
+                        todoData[index].status = b ? 1 : 0;
+
+                        if (b) todoData.removeAt(index);
+
+                        setState(() {});
+                        changeTodoStatus(
+                            todoData[index].id, todoData[index].status);
+                      }),
+                  title: widget,
+                );
+              },
+            ),
             Container(
               alignment: Alignment.bottomCenter,
               margin: EdgeInsets.only(bottom: 30),
